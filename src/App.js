@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-const url = "http://localhost:4000/productos";
+const url = "https://backalkemy.herokuapp.com/productos";
 const App=()=>{
   const [data,setData]=useState([]);
   const [peticion,setPeticion]=useState(true);
