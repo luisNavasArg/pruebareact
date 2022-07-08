@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from "axios";
+import Inicio from './Components/Inicio';
+import EditAdd from './Components/EditAdd'
+import Swal from 'sweetalert2'
 import "bootstrap/dist/css/bootstrap.min.css";
 // const url = "https://backalkemy.herokuapp.com/productos";
 const url ="http://localhost:4000/productos"
@@ -25,9 +28,20 @@ const App=()=>{
   }
 
   const peticionGetOne = (id) => {
-    alert(id)
     axios.get(`${url}/showOne/${id}`).then(response => {
-      console.log(response.data)
+      Swal.fire({
+        title: response.data.code,
+        html:
+          `<p>${response.data.desc}</P>
+          <img width='150px' src=${response.data.img} />
+          `,
+        showCloseButton: true,
+        showCancelButton: false,
+        focusConfirm: false,
+        confirmButtonText:
+          'Cerrar',
+        
+      })
     }).catch(error => {
       console.log(error.message);
     })
@@ -94,70 +108,17 @@ const App=()=>{
       <div className="container">
         <div className='row d-flex jusitfy-conten-center'>
           {peticion ?
-            <div className='mb-3 m-3'>
-              <button className="btn btn-success"
-                onClick={()=>setPeticion(false)}>
-                Agregar Producto</button>
-
-              <table className="table ">
-                <thead>
-                  <tr>
-                    <th>Id</th>
-                    <th>Código</th>
-                    <th>Precio</th>
-                    <th>Descripción</th>
-                    <th>imagen</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map(usuario => {
-                    return (
-                      <tr>
-                        <td>{usuario._id}</td>
-                        <td>{usuario.code}</td>
-                        <td>{usuario.price}</td>
-                        <td>{usuario.desc}</td>
-                        <td><img onClick={()=>peticionGetOne(usuario._id)} style={{width: '150px'}} src={usuario.img} /></td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>             :
-            <div className="form-group">
-                    <div className='mb-3'>
-                      <label htmlFor="id">ID</label>
-                      <input className="form-control" type="text" name="id" id="id" readOnly onChange={handleChange} value={form ? form.id : ''} />
-                    </div>
-                    <div className='mb-3'>
-                      <label htmlFor="nombre">Código</label>
-                      <input className="form-control" type="text" name="code" id="code" onChange={handleChange} value={form ? form.code : ''} />
-                    </div>
-                    <div className='mb-3'>
-                      <label htmlFor="nombre">Precio</label>
-                      <input className="form-control" type="text" name="price" id="price" onChange={handleChange} value={form ? form.price : ''} />
-                    </div>
-                    <div className='mb-3'>
-                      <label htmlFor="nombre">Descripción</label>
-                      <input className="form-control" type="text" name="desc" id="desc" onChange={handleChange} value={form ? form.desc : ''} />
-                    </div>
-                    <div className='mb-3'>
-                      <label htmlFor="nombre">Img</label>
-                      <input className="form-control" type="text" name="img" id="img" onChange={handleChange} value={form ? form.img : ''} />
-                    </div>
-                    {editar?
-                    <div className='mb-3'>
-                      <button className="btn btn-success" onClick={() =>peticionPut()}>
-                        Editar
-                      </button>
-                </div>:
-                    <div className='mb-3'>
-                    <button className="btn btn-success" onClick={() => peticionPost()}>
-                      Agregar
-                    </button>
-                </div>
-                }
-            </div>
+           <Inicio 
+           setPeticion={setPeticion}
+           peticionGetOne={peticionGetOne}
+           data={data}
+           />             :
+          <EditAdd
+          handleChange={handleChange}
+          form={form}
+          peticionPost={peticionPost}
+          peticionPut={peticionPut}
+          />
           }
         </div>
       </div>
