@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-const url = "https://backalkemy.herokuapp.com/productos";
+// const url = "https://backalkemy.herokuapp.com/productos";
+const url ="http://localhost:4000/productos"
 const App=()=>{
   const [data,setData]=useState([]);
   const [peticion,setPeticion]=useState(true);
   const [editar,setEditar]=useState(false)
   const [form,setForm]=useState({id:'',code: '',price: '',desc:'',img:''})
+  const [product,setProduct]=useState({})
 
   useEffect(()=>{
     peticionGet();
@@ -22,6 +24,15 @@ const App=()=>{
     })
   }
 
+  const peticionGetOne = (id) => {
+    alert(id)
+    axios.get(`${url}/showOne/${id}`).then(response => {
+      console.log(response.data)
+    }).catch(error => {
+      console.log(error.message);
+    })
+  }
+
   const peticionPost = async () => {
     delete form.id;
     await axios.post(url+'/add', form).then(response => {
@@ -31,6 +42,7 @@ const App=()=>{
     }).catch(error => {
       console.log(error.message);
     })
+
   }
 
   const peticionPut = () => {
@@ -105,14 +117,13 @@ const App=()=>{
                         <td>{usuario.code}</td>
                         <td>{usuario.price}</td>
                         <td>{usuario.desc}</td>
-                        <td>{usuario.img}</td>
+                        <td><img onClick={()=>peticionGetOne(usuario._id)} style={{width: '150px'}} src={usuario.img} /></td>
                       </tr>
                     )
                   })}
                 </tbody>
               </table>
-            </div>
-            :
+            </div>             :
             <div className="form-group">
                     <div className='mb-3'>
                       <label htmlFor="id">ID</label>
