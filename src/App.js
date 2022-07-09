@@ -5,8 +5,8 @@ import Inicio from './Components/Inicio';
 import EditAdd from './Components/EditAdd'
 import Swal from 'sweetalert2'
 import "bootstrap/dist/css/bootstrap.min.css";
-// const url = "https://backalkemy.herokuapp.com/productos";
-const url ="http://localhost:4000/productos"
+const url = "https://backalkemy.herokuapp.com/productos";
+// const url ="http://localhost:4000/productos"
 const App=()=>{
   const [data,setData]=useState([]);
   const [peticion,setPeticion]=useState(true);
@@ -19,6 +19,7 @@ const App=()=>{
   },[])
 
   const peticionGet = () => {
+
     axios.get(url).then(response => {
       console.log(response.data);
       setData(response.data)
