@@ -1,4 +1,5 @@
-const Inicio=({setPeticion,peticionGetOne,data})=>{
+const Inicio=({setPeticion,peticionGetOne,data,produts,setProducts})=>{
+
     return(
         <div className='mb-3 m-3'>
         <button className="btn btn-success"
@@ -16,14 +17,14 @@ const Inicio=({setPeticion,peticionGetOne,data})=>{
             </tr>
           </thead>
           <tbody>
-            {data.map(usuario => {
+            {data.map((product,index) => {
               return (
-                <tr>
-                  <td>{usuario._id}</td>
-                  <td>{usuario.code}</td>
-                  <td>{usuario.price}</td>
-                  <td>{usuario.desc}</td>
-                  <td><img onClick={()=>peticionGetOne(usuario._id)} style={{width: '150px'}} src={usuario.img} /></td>
+                <tr key={`${index}-product`}>
+                  <td>{product._id}</td>
+                  <td>{product.code}</td>
+                  <td>{product.price}</td>
+                  <td>{product.desc}</td>
+                  <td><img onClick={()=>peticionGetOne(product._id)} style={{width: '150px'}} src={product.img} alt={`img${product.id}`} /></td>
                 </tr>
               )
             })}

@@ -3,8 +3,13 @@ import './App.css';
 import axios from "axios";
 import Inicio from './Components/Inicio';
 import EditAdd from './Components/EditAdd'
+import Nav from './Components/Nav';
 import Swal from 'sweetalert2'
+import ThemeContext, { themes } from './context'
 import "bootstrap/dist/css/bootstrap.min.css";
+import Pedido from './container/Pedido';
+let pedido = new Pedido();
+
 const url = "https://backalkemy.herokuapp.com/productos";
 // const url ="http://localhost:4000/productos"
 const App=()=>{
@@ -12,7 +17,7 @@ const App=()=>{
   const [peticion,setPeticion]=useState(true);
   const [editar,setEditar]=useState(false)
   const [form,setForm]=useState({id:'',code: '',price: '',desc:'',img:''})
-  const [product,setProduct]=useState({})
+  const [products,setProducts]=useState({cant:0,code:'',price:0.0,desc:''})
 
   useEffect(()=>{
     peticionGet();
@@ -27,14 +32,20 @@ const App=()=>{
       console.log(error.message);
     })
   }
-
+  
+  const agregarData=(data)=>{
+    pedido.addProduct(data)
+    setProducts(data)
+  }
   const peticionGetOne = (id) => {
+
     axios.get(`${url}/showOne/${id}`).then(response => {
       Swal.fire({
         title: response.data.code,
         html:
           `<p>${response.data.desc}</P>
           <img width='150px' src=${response.data.img} />
+          <button class="btn btn-primary" onclick=${()=>agregarData(response.data)}>Agregar</button>
           `,
         showCloseButton: true,
         showCancelButton: false,
@@ -47,6 +58,7 @@ const App=()=>{
       console.log(error.message);
     })
   }
+
 
   const peticionPost = async () => {
     delete form.id;
@@ -105,14 +117,26 @@ const App=()=>{
     seleccionarUsuario(id,data); 
     peticionDelete()
   }
+  const [theme, setTheme] = useState(themes.dark);
+
+  const handleChangeTheme = () => {
+    if (theme === themes.dark) setTheme(themes.light)
+    if (theme === themes.light) setTheme(themes.dark)
+  }
     return (
+      
       <div className="container">
+        <ThemeContext.Provider value={{ theme, handleChangeTheme }}>
+          <Nav/>
         <div className='row d-flex jusitfy-conten-center'>
           {peticion ?
            <Inicio 
            setPeticion={setPeticion}
            peticionGetOne={peticionGetOne}
            data={data}
+           products={products}
+           setProducts={setProducts}
+           produts={products}
            />             :
           <EditAdd
           handleChange={handleChange}
@@ -122,7 +146,9 @@ const App=()=>{
           />
           }
         </div>
+        </ThemeContext.Provider>
       </div>
+     
     );
 }
 export default App;
